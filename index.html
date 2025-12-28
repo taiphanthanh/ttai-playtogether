@@ -77,6 +77,8 @@ button {
 
 <div id="icons">
   <p>Chọn biểu tượng:</p>
+
+  <!-- ICON ẢNH -->
   <img src="images/1.png" onclick="selectIcon(this, 'images/1.png')">
   <img src="images/2.png" onclick="selectIcon(this, 'images/2.png')">
   <img src="images/3.png" onclick="selectIcon(this, 'images/3.png')">
@@ -87,7 +89,7 @@ button {
   <img src="images/8.png" onclick="selectIcon(this, 'images/8.png')">
   <img src="images/9.png" onclick="selectIcon(this, 'images/9.png')">
 
-  <!-- ICON MÀU ĐEN -->
+  <!-- ICON ĐEN (ẢNH) -->
   <img src="images/black.png" onclick="selectIcon(this, 'images/black.png')">
 </div>
 
@@ -97,8 +99,13 @@ button {
 let currentIcon = '';
 let history = [];
 
+const grid = document.getElementById('grid');
+const rowsInput = document.getElementById('rows');
+const colsInput = document.getElementById('cols');
+
 function selectIcon(img, icon) {
-  document.querySelectorAll('#icons img').forEach(i => i.classList.remove('selected'));
+  document.querySelectorAll('#icons img')
+    .forEach(i => i.classList.remove('selected'));
   img.classList.add('selected');
   currentIcon = icon;
 }
@@ -106,6 +113,7 @@ function selectIcon(img, icon) {
 function createGrid() {
   const rows = rowsInput.value;
   const cols = colsInput.value;
+
   grid.innerHTML = '';
   grid.style.gridTemplateColumns = `repeat(${cols}, 70px)`;
   history = [];
@@ -133,10 +141,6 @@ function clearGrid() {
   document.querySelectorAll('.cell').forEach(c => c.innerHTML = '');
   history = [];
 }
-
-const grid = document.getElementById('grid');
-const rowsInput = document.getElementById('rows');
-const colsInput = document.getElementById('cols');
 
 createGrid();
 </script>
