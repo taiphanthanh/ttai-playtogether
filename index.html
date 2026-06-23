@@ -46,6 +46,28 @@ body::before {
   padding: 24px;
 }
 
+/* Layout with left vertical selector */
+.layout {
+  display: grid;
+  grid-template-columns: 120px 1fr;
+  gap: 20px;
+  align-items: start;
+}
+
+.left {
+  position: sticky;
+  top: 24px;
+  height: calc(100vh - 48px);
+  overflow: auto;
+  max-height: calc(100vh - 48px);
+}
+
+.right {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
 .panel {
   background: var(--panel);
   border: 1px solid var(--panel-border);
@@ -123,25 +145,25 @@ button:hover {
 }
 
 #icons {
-  display: grid;
+  display: block;
   gap: 12px;
 }
 
 .icon-grid {
-  display: grid;
-  grid-template-columns: repeat(5, minmax(64px, 1fr));
+  display: flex;
+  flex-direction: column;
   gap: 12px;
-  justify-items: center;
+  align-items: center;
 }
 
 #icons img {
-  width: 70px;
-  height: 70px;
+  width: 64px;
+  height: 64px;
   object-fit: cover;
-  border-radius: 18px;
+  border-radius: 14px;
   border: 3px solid transparent;
   cursor: pointer;
-  transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+  transition: transform 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
 }
 
 #icons img:hover {
@@ -198,6 +220,18 @@ button:hover {
 @media (max-width: 760px) {
   .icon-grid {
     grid-template-columns: repeat(4, minmax(60px, 1fr));
+    display: grid;
+    grid-auto-flow: row;
+  }
+
+  .layout {
+    grid-template-columns: 1fr;
+  }
+
+  .left {
+    position: static;
+    max-height: none;
+    height: auto;
   }
 
   .controls {
@@ -215,40 +249,46 @@ button:hover {
 <body>
 
 <div class="app">
-  <div class="panel">
-    <header>
-      <h2>Sự Kiện Play Together</h2>
-      <p class="subtitle">Chọn kích thước bàn và biểu tượng, sau đó click vào ô để đặt. Dùng Quay lại để hoàn tác hoặc Xóa để làm mới toàn bộ.</p>
-    </header>
-
-    <div class="controls">
-      <label>Hàng: <input id="rows" type="number" value="4" min="1"></label>
-      <label>Cột: <input id="cols" type="number" value="5" min="1"></label>
-      <button onclick="createGrid()">Tạo bàn</button>
-      <button onclick="undo()">Quay lại</button>
-      <button onclick="clearGrid()">Xóa</button>
+  <div class="layout">
+    <div class="left">
+      <div class="panel" id="icons">
+        <p>Chọn biểu tượng</p>
+        <div class="icon-grid">
+          <img src="images/1.png" onclick="selectIcon(this, 'images/1.png')">
+          <img src="images/2.png" onclick="selectIcon(this, 'images/2.png')">
+          <img src="images/3.png" onclick="selectIcon(this, 'images/3.png')">
+          <img src="images/4.png" onclick="selectIcon(this, 'images/4.png')">
+          <img src="images/5.png" onclick="selectIcon(this, 'images/5.png')">
+          <img src="images/6.png" onclick="selectIcon(this, 'images/6.png')">
+          <img src="images/7.png" onclick="selectIcon(this, 'images/7.png')">
+          <img src="images/8.png" onclick="selectIcon(this, 'images/8.png')">
+          <img src="images/9.png" onclick="selectIcon(this, 'images/9.png')">
+          <img src="images/black.png" onclick="selectIcon(this, 'images/black.png')">
+        </div>
+      </div>
     </div>
-  </div>
 
-  <div class="panel" id="icons">
-    <p>Chọn biểu tượng</p>
-    <div class="icon-grid">
-      <img src="images/1.png" onclick="selectIcon(this, 'images/1.png')">
-      <img src="images/2.png" onclick="selectIcon(this, 'images/2.png')">
-      <img src="images/3.png" onclick="selectIcon(this, 'images/3.png')">
-      <img src="images/4.png" onclick="selectIcon(this, 'images/4.png')">
-      <img src="images/5.png" onclick="selectIcon(this, 'images/5.png')">
-      <img src="images/6.png" onclick="selectIcon(this, 'images/6.png')">
-      <img src="images/7.png" onclick="selectIcon(this, 'images/7.png')">
-      <img src="images/8.png" onclick="selectIcon(this, 'images/8.png')">
-      <img src="images/9.png" onclick="selectIcon(this, 'images/9.png')">
-      <img src="images/black.png" onclick="selectIcon(this, 'images/black.png')">
+    <div class="right">
+      <div class="panel">
+        <header>
+          <h2>Sự Kiện Play Together</h2>
+          <p class="subtitle">Chọn kích thước bàn và biểu tượng, sau đó click vào ô để đặt. Dùng Quay lại để hoàn tác hoặc Xóa để làm mới toàn bộ.</p>
+        </header>
+
+        <div class="controls">
+          <label>Hàng: <input id="rows" type="number" value="4" min="1"></label>
+          <label>Cột: <input id="cols" type="number" value="5" min="1"></label>
+          <button onclick="createGrid()">Tạo bàn</button>
+          <button onclick="undo()">Quay lại</button>
+          <button onclick="clearGrid()">Xóa</button>
+        </div>
+      </div>
+
+      <div class="panel board-panel">
+        <div id="grid"></div>
+        <p class="hint">Nhấn lên các ô để thêm biểu tượng đã chọn.</p>
+      </div>
     </div>
-  </div>
-
-  <div class="panel board-panel">
-    <div id="grid"></div>
-    <p class="hint">Nhấn lên các ô để thêm biểu tượng đã chọn.</p>
   </div>
 </div>
 
