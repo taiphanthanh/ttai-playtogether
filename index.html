@@ -5,95 +5,252 @@
 <title>Memory Board</title>
 
 <style>
+:root {
+  color-scheme: dark;
+  --bg: #070d1d;
+  --panel: rgba(20, 34, 62, 0.85);
+  --panel-border: rgba(255, 255, 255, 0.12);
+  --text: #eef2ff;
+  --muted: #9bb0ff;
+  --accent: #ff8b65;
+  --accent-strong: #ff5f9d;
+}
+
+* {
+  box-sizing: border-box;
+}
+
 body {
-  font-family: Arial, sans-serif;
-  background: #222;
-  color: #fff;
+  margin: 0;
+  min-height: 100vh;
+  font-family: 'Inter', Arial, sans-serif;
+  background: radial-gradient(circle at top, #3c5eb5 0%, #09101f 45%, #03050b 100%);
+  color: var(--text);
+  display: flex;
+  justify-content: center;
+  align-items: center;
   text-align: center;
 }
 
-.controls {
-  margin: 10px;
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: radial-gradient(circle at top left, rgba(255, 255, 255, 0.08), transparent 30%),
+              radial-gradient(circle at bottom right, rgba(255, 135, 194, 0.12), transparent 25%);
+  pointer-events: none;
 }
 
-input {
-  width: 60px;
-  padding: 5px;
+.app {
+  width: min(1040px, 100%);
+  padding: 24px;
+}
+
+.panel {
+  background: var(--panel);
+  border: 1px solid var(--panel-border);
+  border-radius: 28px;
+  backdrop-filter: blur(20px);
+  padding: 22px 24px;
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.28);
+  margin-bottom: 18px;
+}
+
+header h2 {
+  margin: 0;
+  font-size: clamp(2rem, 2.4vw, 2.6rem);
+  letter-spacing: 0.04em;
+}
+
+.subtitle {
+  margin: 8px auto 0;
+  max-width: 680px;
+  color: var(--muted);
+  font-size: 0.95rem;
+  line-height: 1.6;
+}
+
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px;
+  align-items: center;
+}
+
+.controls label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+input[type='number'] {
+  width: 78px;
+  padding: 10px 12px;
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--text);
+  font-size: 0.95rem;
 }
 
 button {
-  margin: 5px;
-  padding: 8px 12px;
+  border: none;
+  border-radius: 999px;
+  background: linear-gradient(135deg, var(--accent), var(--accent-strong));
+  color: #fff;
+  font-weight: 700;
+  padding: 12px 18px;
   cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: 0 14px 28px rgba(255, 118, 151, 0.22);
+}
+
+button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 18px 34px rgba(255, 118, 151, 0.25);
+}
+
+#icons p {
+  margin: 0 0 12px;
+  font-size: 0.9rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  color: var(--muted);
+}
+
+#icons {
+  display: grid;
+  gap: 12px;
+}
+
+.icon-grid {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(64px, 1fr));
+  gap: 12px;
+  justify-items: center;
 }
 
 #icons img {
-  width: 50px;
+  width: 70px;
   height: 70px;
-  margin: 5px;
-  cursor: pointer;
-  border-radius: 8px;
+  object-fit: cover;
+  border-radius: 18px;
   border: 3px solid transparent;
+  cursor: pointer;
+  transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+#icons img:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25);
 }
 
 #icons img.selected {
-  border-color: yellow;
+  border-color: #ffd970;
+  box-shadow: 0 0 0 6px rgba(255, 217, 112, 0.20);
+}
+
+.board-panel {
+  overflow-x: auto;
 }
 
 #grid {
   display: grid;
   justify-content: center;
-  margin-top: 15px;
-  gap: 6px;
+  margin-top: 14px;
+  gap: 10px;
 }
 
 .cell {
-  width: 70px;
-  height: 90px;
-  background: #444;
-  border-radius: 8px;
+  width: 78px;
+  height: 92px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.02));
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 20px;
   cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.cell:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 22px 40px rgba(0, 0, 0, 0.26);
 }
 
 .cell img {
   width: 100%;
   height: 100%;
-  border-radius: 8px;
+  border-radius: 18px;
+}
+
+.hint {
+  color: var(--muted);
+  margin-top: 12px;
+  font-size: 0.95rem;
+}
+
+@media (max-width: 760px) {
+  .icon-grid {
+    grid-template-columns: repeat(4, minmax(60px, 1fr));
+  }
+
+  .controls {
+    flex-direction: column;
+  }
+
+  .cell {
+    width: 62px;
+    height: 76px;
+  }
 }
 </style>
 </head>
 
 <body>
 
-<h2>Sự Kiện Play Together</h2>
+<div class="app">
+  <div class="panel">
+    <header>
+      <h2>Sự Kiện Play Together</h2>
+      <p class="subtitle">Chọn kích thước bàn và biểu tượng, sau đó click vào ô để đặt. Dùng Quay lại để hoàn tác hoặc Xóa để làm mới toàn bộ.</p>
+    </header>
 
-<div class="controls">
-  Hàng: <input id="rows" type="number" value="4" min="1">
-  Cột: <input id="cols" type="number" value="5" min="1">
-  <button onclick="createGrid()">Tạo bàn</button>
-  <button onclick="undo()">Quay lại</button>
-  <button onclick="clearGrid()">Xóa</button>
+    <div class="controls">
+      <label>Hàng: <input id="rows" type="number" value="4" min="1"></label>
+      <label>Cột: <input id="cols" type="number" value="5" min="1"></label>
+      <button onclick="createGrid()">Tạo bàn</button>
+      <button onclick="undo()">Quay lại</button>
+      <button onclick="clearGrid()">Xóa</button>
+    </div>
+  </div>
+
+  <div class="panel" id="icons">
+    <p>Chọn biểu tượng</p>
+    <div class="icon-grid">
+      <img src="images/1.png" onclick="selectIcon(this, 'images/1.png')">
+      <img src="images/2.png" onclick="selectIcon(this, 'images/2.png')">
+      <img src="images/3.png" onclick="selectIcon(this, 'images/3.png')">
+      <img src="images/4.png" onclick="selectIcon(this, 'images/4.png')">
+      <img src="images/5.png" onclick="selectIcon(this, 'images/5.png')">
+      <img src="images/6.png" onclick="selectIcon(this, 'images/6.png')">
+      <img src="images/7.png" onclick="selectIcon(this, 'images/7.png')">
+      <img src="images/8.png" onclick="selectIcon(this, 'images/8.png')">
+      <img src="images/9.png" onclick="selectIcon(this, 'images/9.png')">
+      <img src="images/black.png" onclick="selectIcon(this, 'images/black.png')">
+    </div>
+  </div>
+
+  <div class="panel board-panel">
+    <div id="grid"></div>
+    <p class="hint">Nhấn lên các ô để thêm biểu tượng đã chọn.</p>
+  </div>
 </div>
-
-<div id="icons">
-  <p>Chọn biểu tượng:</p>
-
-  <!-- ICON ẢNH -->
-  <img src="images/1.png" onclick="selectIcon(this, 'images/1.png')">
-  <img src="images/2.png" onclick="selectIcon(this, 'images/2.png')">
-  <img src="images/3.png" onclick="selectIcon(this, 'images/3.png')">
-  <img src="images/4.png" onclick="selectIcon(this, 'images/4.png')">
-  <img src="images/5.png" onclick="selectIcon(this, 'images/5.png')">
-  <img src="images/6.png" onclick="selectIcon(this, 'images/6.png')">
-  <img src="images/7.png" onclick="selectIcon(this, 'images/7.png')">
-  <img src="images/8.png" onclick="selectIcon(this, 'images/8.png')">
-  <img src="images/9.png" onclick="selectIcon(this, 'images/9.png')">
-
-  <!-- ICON ĐEN (ẢNH) -->
-  <img src="images/black.png" onclick="selectIcon(this, 'images/black.png')">
-</div>
-
-<div id="grid"></div>
 
 <script>
 let currentIcon = '';
